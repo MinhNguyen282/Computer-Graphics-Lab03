@@ -1,19 +1,19 @@
-#ifndef LINE_H
-#define LINE_H
+#ifndef CIRCLE_H
+#define CIRCLE_H
 
 #include "../Shape.h"
 #include <GL/glut.h>
 
-class Line : public Shape {
+class Circle : public Shape {
 private:
-	float x2, y2;
+	float radius;
 public:
-	Line(float x1, float y1, float x2, float y2);
+	Circle(float x, float y, float r);
 	void draw() override;
 	void scale(float x, float y) override;
 	void rotate(float angle) override;
 	void translate(float x, float y) override;
-	std::string getName() override { return "Line"; }
+	std::string getName() override { return "Circle"; }
 };
 
-#endif // !LINE_H
+#endif // !CIRCLE_H

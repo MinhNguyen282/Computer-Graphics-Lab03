@@ -141,8 +141,12 @@
     <ClCompile Include="Source\Shape.cpp" />
     <ClCompile Include="Source\ShapeFactory.cpp" />
     <ClCompile Include="Source\ShapeManager.cpp" />
+    <ClCompile Include="Source\Shapes\Circle.cpp" />
     <ClCompile Include="Source\Shapes\Line.cpp" />
+    <ClCompile Include="Source\Shapes\Rectangle.cpp" />
     <ClCompile Include="Source\Shapes\Triangle.cpp" />
+    <ClCompile Include="Source\Utilities\Matrix.cpp" />
+    <ClCompile Include="Source\Utilities\Transformation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header\ContextMenu.h" />
@@ -150,8 +154,12 @@
     <ClInclude Include="Header\Shape.h" />
     <ClInclude Include="Header\ShapeFactory.h" />
     <ClInclude Include="Header\ShapeManager.h" />
+    <ClInclude Include="Header\Shapes\Circle.h" />
     <ClInclude Include="Header\Shapes\Line.h" />
+    <ClInclude Include="Header\Shapes\Rectangle.h" />
     <ClInclude Include="Header\Shapes\Triangle.h" />
+    <ClInclude Include="Header\Utilities\Matrix.h" />
+    <ClInclude Include="Header\Utilities\Transformation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

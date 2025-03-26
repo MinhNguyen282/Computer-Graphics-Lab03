@@ -62,6 +62,10 @@ void OpenGLApp::mouseCallback(int button, int state, int x, int y) {
 	OpenGLApp::getInstance()->mouse(button, state, x, y);
 }
 
+void OpenGLApp::specialKeyboardCallback(int key, int x, int y) {
+	OpenGLApp::getInstance()->specialKeyboard(key, x, y);
+}
+
 //Initialize the application
 void OpenGLApp::init() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -72,6 +76,7 @@ void OpenGLApp::init() {
 
 	// Create the context menu
 	contextMenu = new ContextMenu();
+	contextMenu->updateMenuItems({ "Line", "Triangle", "Rectangle", "Circle" });
 	contextMenu->attachToMouse(GLUT_RIGHT_BUTTON);
 
 	// Create the shape manager
@@ -80,6 +85,7 @@ void OpenGLApp::init() {
 
 // Display the application
 void OpenGLApp::display() {
+	glClear(GL_COLOR_BUFFER_BIT);
 	glPointSize(2.0);
 	glFlush();
 	shapeManager->drawAll();
@@ -97,6 +103,45 @@ void OpenGLApp::keyboard(unsigned char key, int x, int y) {
 	case 27:
 		exit(0);
 		break;
+	// case '+'
+	case '+':
+		cout << "Scaling up\n";
+		shapeManager->scale(selectedShape, 1.1, 1.1);
+		break;
+	case '-':
+		shapeManager->scale(selectedShape, 0.9, 0.9);
+		break;
+	case 'L':
+		shapeManager->rotate(selectedShape, 3.14/180.0);
+		break;
+	case 'R':
+		shapeManager->rotate(selectedShape, -3.14/180.0);
+		break;
+	}
+}
+
+// Special keyboard event
+void OpenGLApp::specialKeyboard(int key, int x, int y) {
+	switch (key)
+	{
+	case GLUT_KEY_DOWN:
+		cout << "Down\n";
+		shapeManager->translate(selectedShape, 0, -10);
+		break;
+	case GLUT_KEY_UP:
+		cout << "Up\n";
+		shapeManager->translate(selectedShape, 0, 10);
+		break;
+	case GLUT_KEY_LEFT:
+		cout << "Left\n";
+		shapeManager->translate(selectedShape, -10, 0);
+		break;
+	case GLUT_KEY_RIGHT:
+		cout << "Right\n";
+		shapeManager->translate(selectedShape, 10, 0);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -106,8 +151,14 @@ void OpenGLApp::update() {
 		isAddingShape = false;
 		cout << "Shape added" << ' ';
 		for (const auto& x : params) cout << x << ' ';
+
+		vector<string> items = { "Line", "Triangle", "Rectangle", "Circle" };
 		auto shape = ShapeFactory::createShape(shapeType, params);
 		shapeManager->addShape(std::move(shape));
+
+		vector<string> names = shapeManager->getShapeNames();
+		items.insert(items.end(), names.begin(), names.end());
+		contextMenu->updateMenuItems(items);
 		params.clear();
 	}
 	glutPostRedisplay();
@@ -127,14 +178,43 @@ void OpenGLApp::mouse(int button, int state, int x, int y) {
 // Run the application
 void OpenGLApp::run(int argc, char** argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(width, height);
 	glutInitWindowPosition(50, 50);
 	glutCreateWindow(title);
 
 	init();
 	glutDisplayFunc(OpenGLApp::displayCallback);
+	glutKeyboardFunc(OpenGLApp::keyboardCallback);
+	glutSpecialFunc(OpenGLApp::specialKeyboardCallback);
 	glutIdleFunc(OpenGLApp::updateCallback);
 	glutMouseFunc(OpenGLApp::mouseCallback);
 	glutMainLoop();
+}
+
+// Get the context menu
+const ContextMenu* OpenGLApp::getContextMenu() const {
+	return contextMenu;
+}
+
+// Handle the context menu callback
+void OpenGLApp::handleMenuCallback(const string& item) {
+	if (item == "Line") {
+		addShapes(0);
+	}
+	else if (item == "Triangle") {
+		addShapes(1);
+	}
+	else if (item == "Rectangle") {
+		addShapes(2);
+	}
+	else if (item == "Circle") {
+		addShapes(3);
+	}
+	else {
+		//parse the string to get the index
+		int index = stoi(item.substr(item.find_last_of(' ') + 1));
+		cout << "Selected shape: " << index << endl;
+		selectedShape = index;
+	}
 }

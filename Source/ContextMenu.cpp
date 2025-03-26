@@ -4,12 +4,26 @@
 
 ContextMenu::ContextMenu()
 {
-	menuId = glutCreateMenu(ContextMenu::menuCallback);
-	glutAddMenuEntry("Line", 0);
-	glutAddMenuEntry("Triangle", 1);
-	glutAddMenuEntry("Rectangle", 2);
-	glutAddMenuEntry("Circle", 3);
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
+	rebuildMenu();
+}
+
+void ContextMenu::rebuildMenu()
+{
+	if (menuId != 0)
+	{
+		glutDestroyMenu(menuId);
+	}
+	menuId = glutCreateMenu(menuCallback);
+	for (int i = 0; i < menuItems.size(); i++)
+	{
+		glutAddMenuEntry(menuItems[i].c_str(), i);
+	}
+}
+
+void ContextMenu::updateMenuItems(const vector<string> &items)
+{
+	menuItems = items;
+	rebuildMenu();
 }
 
 ContextMenu::~ContextMenu()
@@ -24,19 +38,7 @@ void ContextMenu::attachToMouse(int button)
 
 void ContextMenu::menuCallback(int value)
 {
-	switch (value)
-	{
-	case 0:
-		OpenGLApp::getInstance()->addShapes(0);
-		break;
-	case 1:
-		OpenGLApp::getInstance()->addShapes(1);
-		break;
-	case 2:
-		cout << "Rectangle selected" << endl;
-		break;
-	case 3:
-		cout << "Circle selected" << endl;
-		break;
-	}
+	OpenGLApp* app = OpenGLApp::getInstance();
+	string item = app->getContextMenu()->menuItems[value];
+	app->handleMenuCallback(item);
 }

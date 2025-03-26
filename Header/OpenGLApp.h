@@ -26,14 +26,20 @@ public:
 	static void displayCallback();
 	static void reshapeCallback(int w, int h);
 	static void keyboardCallback(unsigned char key, int x, int y);
+	static void specialKeyboardCallback(int key, int x, int y);
 	static void updateCallback();
 	static void mouseCallback(int button, int state, int x, int y);
+
+	void handleMenuCallback(const string &item);
 	void addShapes(int type);
+	const ContextMenu* getContextMenu() const;
+
 protected:
 	virtual void init();
 	virtual void display();
 	virtual void reshape(int w, int h);
 	virtual void keyboard(unsigned char key, int x, int y);
+	virtual void specialKeyboard(int key, int x, int y);
 	virtual void update();
 	virtual void mouse(int button, int state, int x, int y);
 private:
@@ -41,7 +47,7 @@ private:
 	ContextMenu* contextMenu;
 	ShapeManager* shapeManager;
 	bool isAddingShape;
-	int shapeType;
+	int shapeType, selectedShape;
 	map<int, int> clickedTimes;
 	vector<int> params;
 };
